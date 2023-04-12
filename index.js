@@ -1,7 +1,11 @@
 import express from "express";
 import UserRoute from "./Routes/user.js";
 import path from "path";
+import { connectDB } from "./config/connect.js";
+import User from "./models/user.js";
 
+//! Database connection
+connectDB();
 const app = express();
 
 //! Setting up view engine
@@ -31,17 +35,19 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
-app.post("/", (req, res) => {
-  console.log(req.body);
-
-  res.json({
-    users: [
-      {
-        name: req.body.name,
-        email: req.body.email,
-      },
-    ],
-  });
+app.post("/", async (req, res) => {
+  const { name, email } = req.body;
+  try {
+    const users = await User.create({
+      name,
+      email,
+    });
+    res.json({
+      users,
+    });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.listen(5000, () => {
