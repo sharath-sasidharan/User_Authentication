@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <!-- locals is object object if iv is not there we can use locals.__variable_name -->
+    <!-- <h1>Hello, <%= locals.name %></h1> -->
+
+    <h1>Login</h1>
+    <form method="post" action="/login">
+      <input type="email" name="email" placeholder="Email" />
+      <input type="password" name="password" placeholder="password" />
+      <span style="color: red"><%= locals.message %></span>
+      <button type="submit">Login</button>
+    </form>
+  </body>
+</html>

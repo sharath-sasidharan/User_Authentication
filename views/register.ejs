@@ -8,14 +8,12 @@
     <link href="/css/style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <!-- locals is object object if iv is not there we can use locals.__variable_name -->
-    <!-- <h1>Hello, <%= locals.name %></h1> -->
-
-    <h1>Contact Now</h1>
-    <form method="post" action="/">
-      <input type="text" name="name" />
-      <input type="email" name="email" />
-      <button type="submit">Submit</button>
+    <h1>Register</h1>
+    <form method="post">
+      <input type="text" name="name" placeholder="name" />
+      <input type="email" name="email" placeholder="email" />
+      <input type="password" name="password" placeholder="password" />
+      <button type="submit">Register</button>
     </form>
   </body>
 </html>
