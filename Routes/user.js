@@ -1,31 +1,62 @@
 import express from "express";
+import jwt from "jsonwebtoken";
+import User from "../models/user.js";
 
+import {
+  registerUser,
+  loginUser,
+  logoutUser,
+  HomePage,
+  loginPage,
+  registerPage,
+  getAllUsers,
+  getUser,
+  DeleteUser,
+  updateUser,
+} from "../controllers/user.js";
 const router = express.Router();
 
-// let users = [];
-// const user = [
-//   {
-//     name: "steve",
-//     id: "1",
-//   },
-// ];
+//! isAuthenticated function middleware verifying user
+const isAuthenticated = async (req, res, next) => {
+  const { token } = req.cookies;
 
-// router.get("/", (req, res) => {
-// res.send("hello world!😎");
-// console.log(user);
-// users.push(user);
-// res.sendFile(path.join(path.resolve(), "./public/index.html"));
+  if (token) {
+    const decoded = jwt.verify(token, "secret-key");
+    req.user = await User.findById(decoded._id);
+    next();
+  } else {
+    return res.json({
+      message: "Please Login first",
+    });
+  }
+};
 
-// res.json({
-//   success: true,
-//   users: user,
-// });
-//   res.render("index");
-// });
+//! render logout page which is authenticated that means cookies are available
+router.get("/", isAuthenticated, HomePage);
 
-// router.post("/", (req, res) => {
-//   console.log(req.body);
-//   res.json({});
-// });
+//! Login the login page
+router.get("/login", loginPage);
+
+//! Render the register page
+router.get("/register", registerPage);
+
+//! Login the user
+router.post("/login", loginUser);
+
+//! Register the user
+router.post("/register", registerUser);
+
+//!Get All Users
+router.get("/get-users", getAllUsers);
+
+//! Get user by id
+router
+  .route("/get-users/:id")
+  .get(isAuthenticated, getUser)
+  .put(isAuthenticated, updateUser)
+  .delete(isAuthenticated, DeleteUser);
+
+//! Logout
+router.get("/logout", logoutUser);
 
 export default router;
