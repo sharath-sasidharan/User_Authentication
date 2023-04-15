@@ -4,7 +4,8 @@ import path from "path";
 import { connectDB } from "./config/connect.js";
 import cookieParser from "cookie-parser";
 import { config } from "dotenv";
-
+import taskRouter from "./Routes/task.js";
+import { errorMiddleWare } from "./middlewares/error.js";
 //! DotENV setup
 config({
   path: "./config/data.env",
@@ -30,6 +31,10 @@ app.use(express.json());
 
 //! Import Router Middlewares
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/task", taskRouter);
+
+//! Using Error Middleware
+app.use(errorMiddleWare);
 
 app.listen(process.env.PORT, () => {
   console.log(`listening on port on ${process.env.PORT}`);
