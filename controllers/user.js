@@ -1,6 +1,7 @@
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { sendToken } from "../utils/feature.js";
 
 export const HomePage = (req, res) => {
   res.render("logout", { name: req.user.name });
@@ -19,13 +20,11 @@ export const registerUser = async (req, res) => {
 
   try {
     let user = await User.findOne({ email });
-    // //! while register verify the user exist or no, if no will creating the user for the first time  if yes then redirect user to login page
-    // if (user) {
-    //   return res.redirect("/login");
-    // }
+    //! while register verify the user exist or no, if no will creating the user for the first time  if yes then redirect user to login page
 
     if (user) {
-      return res.json({
+      return res.status(404).json({
+        success: false,
         message: "User already Exists",
       });
     }
@@ -38,20 +37,8 @@ export const registerUser = async (req, res) => {
       password: passwordHash,
     });
 
-    //! Create the token for the user
-    const token = jwt.sign({ _id: user._id }, "secret-key");
-
-    //! Passed that jwt token into the cookie
-    res.cookie("token", token, {
-      expires: new Date(Date.now() + 60 * 1000),
-      httpOnly: true,
-    });
-    // res.render("login");
-    res.status(201).json({
-      success: true,
-      message: "Registered successfully",
-      user,
-    });
+    //! Call SendToken
+    sendToken(user, res, "Register Success", 201);
   } catch (err) {
     console.log(err);
   }
@@ -60,14 +47,12 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ email }).select("+password");
     //! while login verify the user exist or no, if no will redirect user to register if yes then redirect user to home page
-    // if (!user) {
-    //   return res.redirect("/register");
-    // }
+
     if (!user) {
-      return res.json({
-        message: "User not found",
+      return res.status(404).json({
+        message: "Invalid Email or Password",
       });
     }
     //! Compare the password
@@ -75,27 +60,14 @@ export const loginUser = async (req, res) => {
 
     //! password does not match
     if (!password_match) {
-      return res.render("login", {
+      return res.status(404).json({
+        success: false,
         message: "Invalid Credentials",
       });
     }
 
-    //! Create the token for the user
-    const token = jwt.sign({ _id: user._id }, "secret-key");
-
-    //! Passed that jwt token into the cookie
-
-    res.cookie("token", token, {
-      expires: new Date(Date.now() + 60 * 1000),
-      httpOnly: true,
-    });
-
-    // return res.redirect("/");
-    res.status(200).json({
-      success: "true",
-      message: "Login Success",
-      user,
-    });
+    //! Call SendToken
+    sendToken(user, res, "Login Success", 200);
   } catch (err) {
     console.log(err);
   }
@@ -124,7 +96,7 @@ export const updateUser = async (req, res) => {
       });
     }
     //! Create the token for the user
-    const token = jwt.sign({ _id: users._id }, "secret-key");
+    const token = jwt.sign({ _id: users._id }, process.env.JWT_SECRET_KEY);
 
     //! Passed that jwt token into the cookie
 
@@ -154,7 +126,7 @@ export const DeleteUser = async (req, res) => {
     }
     users.deleteOne();
     //! Create the token for the user
-    const token = jwt.sign({ _id: users._id }, "secret-key");
+    const token = jwt.sign({ _id: users._id }, process.env.JWT_SECRET_KEY);
 
     //! Passed that jwt token into the cookie
 
@@ -183,7 +155,7 @@ export const getUser = async (req, res) => {
     }
 
     //! Create the token for the user
-    const token = jwt.sign({ _id: users._id }, "secret-key");
+    const token = jwt.sign({ _id: users._id }, process.env.JWT_SECRET_KEY);
 
     //! Passed that jwt token into the cookie
 

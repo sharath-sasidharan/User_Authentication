@@ -1,7 +1,5 @@
 import express from "express";
-import jwt from "jsonwebtoken";
-import User from "../models/user.js";
-
+import { isAuthenticated } from "../middlewares/auth.js";
 import {
   registerUser,
   loginUser,
@@ -14,22 +12,8 @@ import {
   DeleteUser,
   updateUser,
 } from "../controllers/user.js";
+
 const router = express.Router();
-
-//! isAuthenticated function middleware verifying user
-const isAuthenticated = async (req, res, next) => {
-  const { token } = req.cookies;
-
-  if (token) {
-    const decoded = jwt.verify(token, "secret-key");
-    req.user = await User.findById(decoded._id);
-    next();
-  } else {
-    return res.json({
-      message: "Please Login first",
-    });
-  }
-};
 
 //! render logout page which is authenticated that means cookies are available
 router.get("/", isAuthenticated, HomePage);

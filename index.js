@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 //! Import Router Middlewares
-app.use("/users", userRouter);
+app.use("/api/v1/users", userRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`listening on port on ${process.env.PORT}`);
