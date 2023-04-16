@@ -1,20 +1,18 @@
 import express from "express";
 import userRouter from "./Routes/user.js";
 import path from "path";
-import { connectDB } from "./config/connect.js";
 import cookieParser from "cookie-parser";
 import { config } from "dotenv";
 import taskRouter from "./Routes/task.js";
 import { errorMiddleWare } from "./middlewares/error.js";
 import cors from "cors";
+
+export const app = express();
+
 //! DotENV setup
 config({
   path: "./config/data.env",
 });
-
-//! Database connection
-connectDB();
-const app = express();
 
 app.use(
   cors({
@@ -43,9 +41,3 @@ app.use("/api/v1/task", taskRouter);
 
 //! Using Error Middleware
 app.use(errorMiddleWare);
-
-app.listen(process.env.PORT, () => {
-  console.log(
-    `Server Running on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`
-  );
-});
