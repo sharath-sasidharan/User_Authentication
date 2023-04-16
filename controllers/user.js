@@ -3,18 +3,6 @@ import bcrypt from "bcrypt";
 import { sendToken } from "../utils/feature.js";
 import ErrorHandler from "../middlewares/error.js";
 
-export const HomePage = (req, res) => {
-  res.render("logout", { name: req.user.name });
-};
-
-export const loginPage = (req, res) => {
-  res.render("login");
-};
-
-export const registerPage = (req, res) => {
-  res.render("register");
-};
-
 export const registerUser = async (req, res, next) => {
   const { name, email, password } = req.body;
 
