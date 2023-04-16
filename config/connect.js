@@ -5,8 +5,8 @@ export const connectDB = () => {
     .connect(process.env.MONGO_URI, {
       dbName: "user-authentication",
     })
-    .then(() => {
-      console.log("Connected to MongoDB");
+    .then((c) => {
+      console.log(`Database connected with ${c.connection.host}`);
     })
     .catch(() => {
       console.log("Failed to connect to MongoDB");
