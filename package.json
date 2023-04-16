@@ -8,7 +8,8 @@
     "node": ">=14.20.1"
   },
   "scripts": {
-    "dev": "nodemon -e js,ejs,html -w index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",

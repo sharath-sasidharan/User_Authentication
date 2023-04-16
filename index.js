@@ -45,5 +45,7 @@ app.use("/api/v1/task", taskRouter);
 app.use(errorMiddleWare);
 
 app.listen(process.env.PORT, () => {
-  console.log(`listening on port on ${process.env.PORT}`);
+  console.log(
+    `Server Running on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`
+  );
 });
