@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const TaskSchema = new mongoose.Schema({
+const schema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -9,6 +9,10 @@ const TaskSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  isCompleted: {
+    type: Boolean,
+    default: false,
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -16,10 +20,8 @@ const TaskSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
   },
 });
 
-const Task = mongoose.model("Task", TaskSchema);
-
-export default Task;
+export const Task = mongoose.model("Task", schema);

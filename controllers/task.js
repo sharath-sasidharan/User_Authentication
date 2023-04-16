@@ -1,5 +1,5 @@
 import ErrorHandler from "../middlewares/error.js";
-import Task from "../models/task.js";
+import { Task } from "../models/task.js";
 
 export const addTask = async (req, res, next) => {
   const { title, description } = req.body;
