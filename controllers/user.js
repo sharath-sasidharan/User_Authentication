@@ -85,20 +85,8 @@ export const updateUser = async (req, res, next) => {
     let users = await User.findById(id);
     if (!users) return next(new ErrorHandler("User not found", 404));
 
-    //! Create the token for the user
-    const token = jwt.sign({ _id: users._id }, process.env.JWT_SECRET_KEY);
-
-    //! Passed that jwt token into the cookie
-
-    res.cookie("token", token, {
-      expires: new Date(Date.now() + 60 * 1000),
-      httpOnly: true,
-    });
-    res.status(200).json({
-      success: "true",
-      users,
-      message: "Updated",
-    });
+    //! Call SendToken
+    sendToken(users, res, "User Updated Success", 200);
   } catch (err) {
     next(err);
   }
@@ -112,19 +100,8 @@ export const DeleteUser = async (req, res, next) => {
     if (!users) return next(new ErrorHandler("User not found", 404));
 
     users.deleteOne();
-    //! Create the token for the user
-    const token = jwt.sign({ _id: users._id }, process.env.JWT_SECRET_KEY);
-
-    //! Passed that jwt token into the cookie
-
-    res.cookie("token", token, {
-      expires: new Date(Date.now() + 60 * 1000),
-      httpOnly: true,
-    });
-    res.status(200).json({
-      success: "true",
-      message: "Deleted",
-    });
+    //! Call SendToken
+    sendToken(users, res, "User Deleted Success", 200);
   } catch (err) {
     next(err);
   }
@@ -137,26 +114,20 @@ export const getUser = async (req, res, next) => {
     let users = await User.findById(id);
     if (!users) return next(new ErrorHandler("User not found", 404));
 
-    //! Create the token for the user
-    const token = jwt.sign({ _id: users._id }, process.env.JWT_SECRET_KEY);
-
-    //! Passed that jwt token into the cookie
-
-    res.cookie("token", token, {
-      expires: new Date(Date.now() + 60 * 1000),
-      httpOnly: true,
-    });
-    res.status(200).json({
-      success: "true",
-      users,
-    });
+    //! Call SendToken
+    sendToken(users, res, "User fetched Success", 200);
   } catch (err) {
     next(err);
   }
 };
 
 export const logoutUser = (req, res) => {
-  res.cookie("token", null, { expires: new Date(Date.now()) });
+  res.cookie("token", null, {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+    sameSite: process.env.NODE_ENV === "Development" ? "lax" : "none",
+    secure: process.env.NODE_ENV === "Development" ? false : true,
+  });
   res.status(200).json({
     message: "Logout Success",
   });

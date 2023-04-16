@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import { config } from "dotenv";
 import taskRouter from "./Routes/task.js";
 import { errorMiddleWare } from "./middlewares/error.js";
+import cors from "cors";
 //! DotENV setup
 config({
   path: "./config/data.env",
@@ -15,6 +16,13 @@ config({
 connectDB();
 const app = express();
 
+app.use(
+  cors({
+    origin: [process.env.FRONTEND_URL],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 //! Setting up cookieParser
 app.use(cookieParser());
 //! Setting up view engine
