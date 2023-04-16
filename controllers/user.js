@@ -1,6 +1,5 @@
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { sendToken } from "../utils/feature.js";
 import ErrorHandler from "../middlewares/error.js";
 
